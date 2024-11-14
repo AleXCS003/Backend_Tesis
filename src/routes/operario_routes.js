@@ -10,7 +10,7 @@ router.post("/operario/login",loginOperario)
 router.post("/operario/recuperar-password/:token",comprobarTokenContraseña)
 router.post("/operario/recuperar-password",recuperarContraseña)
 router.post("/operario/nuevo-password",verificarAutenticacion,nuevaContraseña)
-router.get("/operario/perfil",perfilOperario)
+router.get("/operario/perfil-operario",verificarAutenticacion,perfilOperario)
 
 
 export default router

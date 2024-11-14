@@ -247,7 +247,7 @@ const recuperarContraseñaAdmin = async(req,res) =>{
 const perfilAdministrador = async (req,res) =>{
 
     try {
-        const administrador = await Administrador.findById(req.usuario._id).select("-password -token");
+        const administrador = await Administrador.findById(req.administrador._id).select("-password -token");
         res.json({
           _id: administrador._id,
           username: administrador.username,

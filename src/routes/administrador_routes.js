@@ -5,7 +5,7 @@ const router = Router ()
 
  import {
    registroAdministrador ,registroOperarios,loginAdminController,actualizarOperario,cambiarEstadoOperario,listarOperarios,
-   nuevaContraseñaAdmin,cambiarContraseñaAdmin,
+   nuevaContraseñaAdmin,cambiarContraseñaAdmin,perfilAdministrador
 
    
  } from "../controllers/administrador_controller.js"
@@ -19,5 +19,6 @@ const router = Router ()
 router.post("/administrador/estado/:id",cambiarEstadoOperario)
 router.post("/administrador/nueva-password/:token", nuevaContraseñaAdmin);
 router.post("/administrador/cambiar-password",verificarAdministrador,cambiarContraseñaAdmin)
+router.get("/administrador/perfil-admin",verificarAdministrador,perfilAdministrador)
  
  export default router

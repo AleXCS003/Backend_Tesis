@@ -132,7 +132,7 @@ const nuevaContraseña =  async(req,res)=>{
 
 const perfilOperario =  async(req,res) =>{
     try {
-        const operario = await Operarios.findById(req.usuario._id).select("-password -token");
+        const operario = await Operarios.findById(req.operario._id).select("-password -token");
         res.json({
           _id: operario._id,
           usernameO: operario.username,
@@ -149,11 +149,54 @@ const perfilOperario =  async(req,res) =>{
 
 }
 
+const cambiarContraseñaOperario = async (res,req) =>{
+    try {
+        const operarioId = req.Operarios.id
+        const {passwordActual,nuevoPassword, confirmarPassword} = req.body
+    // validar que todos los campos esten llenos 
+    if (!passwordActual || !nuevoPassword || !confirmarPassword ){
+        return res.status(404).json({
+            msg:"Debe llenar todos los campos"
+        })
+    }
+    const operario = await Operarios.findById(operarioId)
+    const passwordCorrecto = await operario.matchPassword(passwordActual)
+    if(!passwordCorrecto){
+        return res.status(404) .json({
+            msg:"La contraseña actual es incorrecta"
+        })
+    }
+
+    //verificar que la nueva contraseña y la confirmacion coincidan
+    if (nuevoPassword !== confirmarPassword){
+        return res.status(400).json({
+            msg: "Las contraseñas nuevas no coinciden"
+        })
+    }
+
+    //actualiza la contraseña
+    operario.password = await operario.encryptPassword(nuevoPassword)
+    await operario.save()
+    res.json({
+        msg:"Contraseña actualizada correctamente"
+    })
+    } catch (error) {
+        console.log (error)
+        res.status(500).json(
+            {
+                msg:"Hubo un error al cambiar la contraseña"  
+              }
+        )
+       
+    }
+} 
+
 
 export {
     loginOperario,
     recuperarContraseña,
     comprobarTokenContraseña,
     nuevaContraseña,
-    perfilOperario
+    perfilOperario,
+    cambiarContraseñaOperario
 }
