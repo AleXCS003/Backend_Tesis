@@ -45,7 +45,8 @@ const loginAdminController = async (req,res)=>{
         nombre,
         apellido,
         token,
-        email})
+        email,
+        rol:"administrador"})
 
 }
 
@@ -83,14 +84,49 @@ const listarOperarios =async(req,res)=>{
 
 //modificar operarios
 const actualizarOperario = async(req,res)=>{
-    const {id} =req.params
-    if (Object.values(req.body).includes("")) return res.status(400).json(
-        {msg:"Lo sentimos debe completar todos los campos"})
-        console.log({id})
+    try {
+        const { id } = req.params;
 
-    if(!mongoose.Types.ObjectId.isValid(id) ) return res.status(404).json({msg:`Lo sentimos, no existe el administrador ${id}`});
-    await Operarios.findByIdAndUpdate(req.params.id,req.body)
-    res.status(200).json({msg:"Actualización exitosa del operario"})
+        // Validar campos vacíos
+        if (Object.values(req.body).includes("")) {
+            return res.status(400).json({
+                msg: "Lo sentimos, debe completar todos los campos"
+            });
+        }
+
+        // Validar formato del ID
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                msg: "ID de operario no válido"
+            });
+        }
+
+        // Verificar si el operario existe
+        const operarioExiste = await Operarios.findById(id);
+        if (!operarioExiste) {
+            return res.status(404).json({
+                msg: `No existe el operario con ID: ${id}`
+            });
+        }
+
+        // Actualizar operario
+        const operarioActualizado = await Operarios.findByIdAndUpdate(
+            id,
+            req.body,
+            { new: true } // Esto retorna el documento actualizado
+        );
+
+        res.status(200).json({
+            msg: "Actualización exitosa del operario",
+            operario: operarioActualizado
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            msg: "Error al actualizar el operario"
+        });
+    }
 
 }
 

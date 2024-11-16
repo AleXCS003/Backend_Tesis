@@ -50,7 +50,7 @@ try {
         
     } catch (error) {
         console.log("Error al verificar token:", error)
-        return res.status(401).json({
+        return res.status(401).json({   
             msg: "Token no válido"
         })
     }

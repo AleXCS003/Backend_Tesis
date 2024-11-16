@@ -2,7 +2,7 @@ import mongoose,{Schema,model} from "mongoose";
 import bycrypt  from "bcryptjs"
 
 const operarioSchema= new Schema({
-    username: {
+    username:    {
         type: String,
         required: true,
         unique: true,

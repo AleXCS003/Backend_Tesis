@@ -5,7 +5,7 @@ import { agregarDependencia, listarDependencias } from '../controllers/dependenc
 
 const router = Router ()
 
-router.post('/dependencia/agregar', agregarDependencia)
-router.get('/listar', listarDependencias)
+router.post('/dependencia/agregar', verificarAdministrador,agregarDependencia)
+router.get('/listar',verificarAdministrador, listarDependencias)
 
 export default router

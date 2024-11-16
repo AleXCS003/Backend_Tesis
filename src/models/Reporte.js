@@ -65,6 +65,11 @@ const reporteSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Dependencia',
         require: true
-    }*/
+    },*/
+    operario: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Operarios',
+        require: true
+        },
 });
 export default model ('Reporte',reporteSchema);

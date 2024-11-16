@@ -1,7 +1,6 @@
 import generarJWT from "../helpers/crearJWT.js"
 import Operarios from "../models/Operarios.js"
 import { enviarRestablecimientoContraseña } from "../config/nodemailer.js"
-import verificarAutenticacion from "../middlewares/autenticacion.js"
 
 //metodo login operario
 
