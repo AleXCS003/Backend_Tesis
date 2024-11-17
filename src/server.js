@@ -28,7 +28,7 @@ app.use("/api",routerOperario)
 app.use("/api",routerReporte)
 app.use("/api",routerDependencia)
 //Manejo de una ruta que no sea encontrada 
-app.use((req,res)=>res.status(404).send("Endoint no encontrado - 404"))
+app.use((req,res)=>res.status(404).send("Endpoint no encontrado - 404"))
 app.use('/uploads', express.static('uploads'))
 
 //exportar

@@ -1,107 +1,46 @@
 //importaa jwt y modelo 
  import jwt from 'jsonwebtoken'
  import Operarios from '../models/Operarios.js'
- import Administrador from '../models/Administrador.js'
 
 
 
  //metodo para proteger rutar
  const verificarAutenticacion =  async (req,res,next)=> {
-
-
-       /* try {
-            // Verificar token
-            const token = req.headers.authorization
-            if(!token) {
-                return res.status(401).json({
-                    msg: "Token no proporcionado"
-                })
-            }
-    
-            // Obtener token limpio
-            const tokenLimpio = token.split(' ')[1]
-            
-            // Verificar token
-            const decoded = jwt.verify(tokenLimpio, process.env.JWT_SECRET)
-            
-            // Buscar operario
-            const operario = await Operarios.findById(decoded.id)
-                .select("-token") // Mantener password para matchPassword
-            
-            if(!operario) {
-                return res.status(404).json({
-                    msg: "Operario no encontrado"
-                })
-            }
-    
-            // Agregar operario al request
-            req.operario = operario
-            next()
-    
-        } catch (error) {
-            console.log(error)
+    try {
+        // 1. Verificar que exista el header de autorización
+        if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) {
             return res.status(401).json({
-                msg: "Token no válido"
-            })
+                msg: "No hay operario autenticado"
+            });
         }
 
-}*/
-
-try {
-    // Verificar si hay token y extraerlo (usando tu método que funciona)
-    const token = req.headers.authorization?.split(' ')[1]
-    
-    if (!token) {
-        return res.status(401).json({
-            msg: "No hay token, autorización denegada"
-        })
-    }
-
-    try {
-        // Verificar token usando JWT_SECRET en lugar de JWRT_SECRET
-        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        // 2. Obtener y verificar el token
+        const token = req.headers.authorization.split(' ')[1];
         
-        // Buscar el administrador sin usar lean() para mantener los métodos
+        // 3. Decodificar el token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        
+        // 4. Buscar el administrador
         const operario = await Operarios.findById(decoded.id)
-            .select("-token") // Excluimos token pero mantenemos password para matchPassword
-        
+            .select("-password -token");
+
         if (!operario) {
             return res.status(401).json({
-                msg: "Token no válido"
-            })
+                msg: "Token no válido - usuario no existe"
+            });
         }
 
-        // Verificar si el administrador está activo
-        if (!operario.status) {
-            return res.status(403).json({
-                msg: "Operario inactivo"
-            })
-        }
+        // 5. Guardar el administrador en el request
+        req.Operarios = operario;
+        next();
 
-        // Verificar rol si es necesario
-        if (decoded.rol && decoded.rol !== "operario") {
-            return res.status(403).json({
-                msg: "Ruta  de operario"
-            })
-        }
-
-        // Agregar administrador al request
-        req.operario = operario
-        next()
-        
     } catch (error) {
-        console.log("Error al verificar token:", error)
-        return res.status(401).json({   
-            msg: "Token no válido"
-        })
+        console.log("Error de autenticación:", error);
+        return res.status(401).json({
+            msg: "No hay operario autenticado"
+        });
     }
-    
-} catch (error) {
-    console.log("Error general:", error)
-    return res.status(401).json({
-        msg: "Token no válido"
-    }) 
-}
+
 }
 
 

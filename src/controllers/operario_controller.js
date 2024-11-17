@@ -15,6 +15,7 @@ const loginOperario = async(req,res)=>{
     if(!verificarPassword)return res.status(404).json({msg:"Lo sentimos, el password no es el correcto"})
     const token = generarJWT(OperarioBDD._id,"operario")
     const {username:usernameO,nombre,apellido,telefono,email,estado,_id}=OperarioBDD
+    await OperarioBDD.save()
 
     res.status(200).json({
         token,
@@ -24,7 +25,6 @@ const loginOperario = async(req,res)=>{
         telefono,
         email,
         estado,
-        rol:"operario",
         _id
     })
 
@@ -127,20 +127,19 @@ const nuevaContraseña =  async(req,res)=>{
 
 const perfilOperario =  async(req,res) =>{
     try {
-        const operario = await Operarios.findById(req.operario._id).select("-password -token");
-        res.json({
-          _id: operario._id,
-          usernameO: operario.username,
-          nombre: operario.nombre,
-          apellido: operario.apellido,
-          telefono: operario.telefono,
-          email: operario.email,
-          rol: "operario"
-        });
-      } catch (error) {
+        // Verificar que existe el operario en el request
+
+        const operario = await Operarios.findById(req.Operario._id)
+            .select("-password -token");
+
+        res.json(operario);
+
+    } catch (error) {
         console.log(error);
-        res.status(500).json({ msg: "Error al obtener el perfil" });
-      }
+        res.status(500).json({
+            msg: "Error al obtener el perfil del operario"
+        });
+    }
 
 }
 

@@ -225,7 +225,7 @@ const actualizarReporteOperario = async(req,res)=>{
             })
         }
 
-        // Calcular si han pasado 5 minutos desde la creación
+     
         const fechaCreacion =  reporteActual._id.getTimestamp()
         const fechaLimite = new Date(fechaCreacion.getTime() + 2 * 60000) // 5 minutos en milisegundos
         const ahora = new Date()
@@ -270,34 +270,39 @@ const actualizarReporteOperario = async(req,res)=>{
 //filtrar reportes
 
 const filtrarReportes = async(req,res)=>{
-
-    const {numero_acta ,fecha_inicio,fecha_fin} = req.body;
-
-    //objeto de busqueda 
-    const filter ={}
-    
-    if(numero_acta){
-        filter.numero_acta=numero_acta;
-    }
-
-    if(fecha_inicio && fecha_fin ){
-        const startDate = new Date(fecha_inicio)
-        const endDate = new Date(fecha_fin)
-
-        endDate.setHours(23,59,59,999)
-        //filtrado por un rango de fechas 
-        filter.fecha_creacion = {$gte:startDate,$lte:endDate}
-    }
     try {
-        const reportes = await Reporte.find(filter)
+        
+        const { numero_acta, fecha_inicio, fecha_fin } = req.query;
+        
+        const filter = {};
+        
+        // Filtrar por número de acta
+        if (numero_acta && numero_acta.trim()) {
+            filter.numero_acta = new RegExp(numero_acta, 'i'); 
+        }
 
-    if (reportes.length === 0){
-        res.status (404).json({msg:"No se encontraron reportes"}) 
-    }else{
-        res.status(200).json(reportes)
-    }   
+        if (fecha_inicio && fecha_fin) {
+            const startDate = new Date(fecha_inicio);
+            const endDate = new Date(fecha_fin);
+            endDate.setHours(23, 59, 59, 999);
+            
+            filter.fecha_creacion = {
+                $gte: startDate,
+                $lte: endDate
+            };
+        }
+
+        const reportes = await Reporte.find(filter);
+        
+        if (reportes.length === 0) {
+            return res.status(404).json({ msg: "No se encontraron reportes" });
+        }
+        
+        res.status(200).json(reportes);
+        
     } catch (error) {
-        res.status (500).json({msg:"Error al filtrar reportes",error})   
+        console.error('Error al filtrar reportes:', error);
+        res.status(500).json({ msg: "Error al filtrar reportes" });
     }
 }
 

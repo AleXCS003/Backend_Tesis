@@ -34,19 +34,16 @@ const loginAdminController = async (req,res)=>{
     if(!confirmarPassword) return res.status (404). json({msg:"Contraseña es incorrecta"})
     
     //pendiente 
-    const token  = generarJWT(administradorEncontrado.id,"administrador")
+    const token  = generarJWT(administradorEncontrado._id,"administrador")
     const{_id,nombre,apellido,email} = administradorEncontrado
-
-
-
+    await administradorEncontrado.save()
     res.status(200).send({
         _id,
         username:administradorEncontrado.username,
         nombre,
         apellido,
         token,
-        email,
-        rol:"administrador"})
+        email,})
 
 }
 
@@ -283,19 +280,30 @@ const recuperarContraseñaAdmin = async(req,res) =>{
 const perfilAdministrador = async (req,res) =>{
 
     try {
-        const administrador = await Administrador.findById(req.administrador._id).select("-password -token");
-        res.json({
-          _id: administrador._id,
-          username: administrador.username,
-          nombre: administrador.nombre,
-          apellido: administrador.apellido,
-          email: administrador.email,
-          rol: "administrador"
-        });
-      } catch (error) {
+        // Verificar si existe req.Administrador
+        if (!req.Administrador) {
+            return res.status(401).json({
+                msg: "No hay administrador autenticado"
+            });
+        }
+
+        const administrador = await Administrador.findById(req.Administrador._id)
+            .select("-password -token -confirmado");
+
+        if (!administrador) {
+            return res.status(404).json({
+                msg: "Administrador no encontrado"
+            });
+        }
+
+        res.json(administrador);
+
+    } catch (error) {
         console.log(error);
-        res.status(500).json({ msg: "Error al obtener el perfil" });
-      }
+        res.status(500).json({
+            msg: "Error al obtener el perfil"
+        });
+    }
 }
 
 

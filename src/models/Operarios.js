@@ -41,10 +41,6 @@ const operarioSchema= new Schema({
         default:true,
         require:false,
     },
-    Administrador: {
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'Administrador'
-    }
     
 },{
     timestamps:true
