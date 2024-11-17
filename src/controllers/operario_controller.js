@@ -96,28 +96,24 @@ const comprobarTokenContraseña =async(req,res) =>{
 
 const nuevaContraseña =  async(req,res)=>{
     try {
-
-        const{ actualPassword,nuevoPassword,confirmarPassword} = req.body
-
+        const {password, confirmarPassword} = req.body
+        
         if(Object.values(req.body).includes("")) return res.status(404).json({
-            msg:"debe llenar todos los campos"
+            msg: "Lo sentimos debe completar todos los campos"
         })
-        if(nuevoPassword !== confirmarPassword) {
-            return res.status(400).json({
-                msg: "Las contraseñas nuevas no coinciden"
-            })
-        }
+        
+        if (password !== confirmarPassword) return res.status(400).json({
+            msg: "Las contraseñas no coinciden"
+        })
+            
+        const operario = await Operarios.findOne({token: req.params.token})
+        
+        if (!administrador) return res.status(404).json({
+            msg: "Lo sentimos no hemos podido verificar su cuenta"
+        })
 
-        const operario = await Operarios.findById(req.operario._id)
-        if(!operario)return res.status(404).json({
-            msg:"lo sentimos no existe el usuario"
-        })
-        const verificarPassword= await operario.matchPassword(actualPassword)
-        if(!verificarPassword) return res.status(404).json({
-            msg:"La contraseña actual no es correcta"
-        })
-        operario.password= await operario.matchPassword(nuevoPassword)
-
+        operario.token = null
+        operario.password = await operario.encryptPassword(password)
         await operario.save()
 
         res.status(200).json({msg: "Contraseña actualizada con éxito"})

@@ -61,55 +61,6 @@ try {
         msg: "Token no válido"
     }) 
 }
-///-----------------------------------------------
-// Método para proteger rutas
-
-    // Validación si se está enviando el token
- /*if(!req.headers.authorization) return res.status(404).json({msg:"Lo sentimos, debes proprocionar un token"})  
-
-    // Desestructurar el token pero del headers
-    const {authorization} = req.headers
-
-    // Capturar errores
-    try {
-
-        // verificar el token recuperado con el almacenado 
-       const {id,rol} = jwt.verify(authorization.split(' ')[1],process.env.JWT_SECRET)
-        
-        // Verificar el rol
-        if (rol==="administrador"){
-            // Obtener el usuario 
-            req.administrador= await Administrador.findById(id).lean().select("-password")
-            .select("-password") 
-            // Continue el proceso
-            if (!administrador){
-                return res.status(404).json({
-                    msg:"Administridador no encontrado"
-                })
-            }
-            req.administrador=administrador
-            next()
-        }
-        else{
-            const operario = await Operarios.findById(id)
-            .select("-password")
-        
-        if (!operario) {
-            return res.status(404).json({
-                msg: "Operario no encontrado"
-            })
-        }
-
-        req.operario = operario
-        next()
-        }
-
-    } catch (error) {
-        // Capturar errores y presentarlos
-        console.log (error)
-        const e = new Error("Formato del token no válido")
-        return res.status(404).json({msg:e.message})*/
-
 }
 
 // Exportar el método

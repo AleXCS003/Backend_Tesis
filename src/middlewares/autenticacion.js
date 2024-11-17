@@ -7,44 +7,9 @@
 
  //metodo para proteger rutar
  const verificarAutenticacion =  async (req,res,next)=> {
-/*
-    ////METODO PRINCIPAL 
- //validar si se esta enviando el token 
-    const token = req.headres.authorization
-    if(!token) return res.status(404).json({
-        msg:"lo sentimos primero debe prporcionar un token"
-    })
-     
-    // Desestructurar el token pero del headers
-    const {authorization} = req.headers
-
-    // Capturar errores
-    try {
-        // verificar el token recuperado con el almacenado 
-        const {id,rol} = jwt.verify(authorization.split(' ')[1],process.env.JWT_SECRET)
-        
-        // Verificar el rol
-        if (rol==="operario"){
-            // Obtener el usuario 
-            req.operario = await Operarios.findById(id).lean().select("-password") // pendiente revisar la varible operario
-            // Continue el proceso
-            next()
-        }
-        else{
-            req.administrador = await Administrador.findById(id).lean().select("-password")
-            console.log(req.administrador);
-            next()
-        }
 
 
-
-    } catch (error) {
-        // Capturar errores y presentarlos
-        const e = new Error("Formato del token no válido")
-        return res.status(404).json({msg:e.message})
-    }*/
-
-        try {
+       /* try {
             // Verificar token
             const token = req.headers.authorization
             if(!token) {
@@ -80,6 +45,63 @@
             })
         }
 
+}*/
+
+try {
+    // Verificar si hay token y extraerlo (usando tu método que funciona)
+    const token = req.headers.authorization?.split(' ')[1]
+    
+    if (!token) {
+        return res.status(401).json({
+            msg: "No hay token, autorización denegada"
+        })
+    }
+
+    try {
+        // Verificar token usando JWT_SECRET en lugar de JWRT_SECRET
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        
+        // Buscar el administrador sin usar lean() para mantener los métodos
+        const operario = await Operarios.findById(decoded.id)
+            .select("-token") // Excluimos token pero mantenemos password para matchPassword
+        
+        if (!operario) {
+            return res.status(401).json({
+                msg: "Token no válido"
+            })
+        }
+
+        // Verificar si el administrador está activo
+        if (!operario.status) {
+            return res.status(403).json({
+                msg: "Operario inactivo"
+            })
+        }
+
+        // Verificar rol si es necesario
+        if (decoded.rol && decoded.rol !== "operario") {
+            return res.status(403).json({
+                msg: "Ruta  de operario"
+            })
+        }
+
+        // Agregar administrador al request
+        req.operario = operario
+        next()
+        
+    } catch (error) {
+        console.log("Error al verificar token:", error)
+        return res.status(401).json({   
+            msg: "Token no válido"
+        })
+    }
+    
+} catch (error) {
+    console.log("Error general:", error)
+    return res.status(401).json({
+        msg: "Token no válido"
+    }) 
+}
 }
 
 

@@ -6,10 +6,15 @@ import { loginOperario,recuperarContraseña,nuevaContraseña,comprobarTokenContr
 
  } from "../controllers/operario_controller.js";
 
+
+
+//rutas libre
 router.post("/operario/login",loginOperario)
-router.post("/operario/recuperar-password/:token",comprobarTokenContraseña)
+router.get("/operario/comprobar/:token",comprobarTokenContraseña)
 router.post("/operario/recuperar-password",recuperarContraseña)
-router.post("/operario/nuevo-password",verificarAutenticacion,nuevaContraseña)
+router.post("/operario/nuevo-password/:token",nuevaContraseña)
+
+//rutas privadas
 router.get("/operario/perfil-operario",verificarAutenticacion,perfilOperario)
 router.post("/operario/cambiar-contraseña",verificarAutenticacion,cambiarContraseñaOperario)
 
