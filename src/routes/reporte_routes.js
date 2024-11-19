@@ -3,6 +3,7 @@ import upload from "../middlewares/multer.js";
 import verificarAutenticacion from "../middlewares/autenticacion.js";
 import verificarAdministrador from "../middlewares/autenticacionAdmin.js";
 
+
 const router = Router ()
 
 import { registrarReporte,
@@ -24,7 +25,7 @@ router.put("/reporte/actualizar-reporte/:id",upload.single('archivo'),verificarA
 
 //endpoints para operario
 router.post("/reporte/registrar-reporte-operario",upload.single('archivo'),verificarAutenticacion,registrarReporteOperario)
-router.get("/reporte/listar-reporte-operario",verificarAutenticacion,listarReportesOperario)
+router.get("/reporte/listar-reporte-operario/:operarioId",verificarAutenticacion,listarReportesOperario)
 router.put("/reporte/actualizar-reporte-operario/:id",upload.single('archivo'),verificarAutenticacion,actualizarReporteOperario)    
 
 //rutas libres

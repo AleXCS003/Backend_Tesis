@@ -68,8 +68,8 @@ const reporteSchema = new Schema({
     },*/
     operario: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Operarios',
-        require: true
+        //type: String,
+        ref: 'Operarios'
         },
 });
 export default model ('Reporte',reporteSchema);

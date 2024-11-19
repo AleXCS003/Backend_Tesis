@@ -16,7 +16,7 @@ router.post("/operario/nuevo-password/:token",nuevaContraseña)
 
 //rutas privadas
 router.get("/operario/perfil-operario",verificarAutenticacion,perfilOperario)
-router.post("/operario/cambiar-contraseña",verificarAutenticacion,cambiarContraseñaOperario)
+router.post("/operario/cambiar-password",verificarAutenticacion,cambiarContraseñaOperario)
 
 
 export default router

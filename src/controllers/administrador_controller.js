@@ -179,7 +179,7 @@ const nuevaContraseñaAdmin = async (req, res) => {
 //modificar la contraseña dentro del sistema;
 const cambiarContraseñaAdmin =async (req,res) =>{
     try {
-        const administradorId = req.administrador.id
+        const administradorId = req.administrador._id
         const {passwordActual,nuevoPassword, confirmarPassword} = req.body
     // validar que todos los campos esten llenos 
     if (!passwordActual || !nuevoPassword || !confirmarPassword ){

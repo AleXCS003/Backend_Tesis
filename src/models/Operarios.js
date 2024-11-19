@@ -48,7 +48,7 @@ const operarioSchema= new Schema({
 
 
 
-operarioSchema.methods.encryPassword = async function (password) {
+operarioSchema.methods.encryptPassword = async function (password) {
 
     const salt = await bycrypt.genSalt(10)
     const passwordEncryp= await bycrypt.hash

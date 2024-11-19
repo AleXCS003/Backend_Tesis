@@ -64,7 +64,7 @@ const registrarReporte = async (req,res) =>{
 
 const registrarReporteOperario =  async (req,res) =>{
     try {
-        const { numero_acta, estado } = req.body
+        const { numero_acta, estado,operarioId } = req.body
 
         // Validar campos requeridos
         if(Object.values(req.body).includes("")) {
@@ -72,6 +72,19 @@ const registrarReporteOperario =  async (req,res) =>{
                 msg: "Lo sentimos, debe completar todos los campos"
             })
         }
+        if (!mongoose.Types.ObjectId.isValid(operarioId)) {
+            return res.status(400).json({
+                msg: "ID de operario no válido"
+            });
+        }
+
+        const operarioExiste = await Operarios.findById(operarioId);
+        if (!operarioExiste) {
+            return res.status(404).json({
+                msg: "El operario no existe"
+            });
+        }
+
 
         // Verificar si ya existe el reporte
         const reporteExistente = await Reporte.findOne({ numero_acta })
@@ -95,6 +108,8 @@ const registrarReporteOperario =  async (req,res) =>{
             ...req.body,
             archivo: req.file ? req.file.path : null,
            // creador: req.operario?._id  // Si tienes autenticación
+           operario: operarioId,  // Asignamos el operario al reporte
+            fecha_creacion: Date.now()
         })
 
         await nuevoReporte.save()
@@ -122,23 +137,39 @@ const listarReporte = async(req,res)=>{
 }
 
 const listarReportesOperario = async(req, res) => {
-    try {
-        const { username } = req.operario;
+    /*const {id} = req.params
+    if( !mongoose.Types.ObjectId.isValid(id) ) return res.status(404).json({msg:`Lo sentimos, no existe ese reporte`});
+    const reporte = await Reporte.findById(id).populate('Operarios','_id nombre')
+    res.status(200).json(reporte)*/
 
-        // Verificamos que sea un operario válido
-        const operario = await Operarios.findOne({ username });
-        if (!operario) {
-            return res.status(403).json({ msg: 'Acceso denegado - No es un operario válido' });
+    try {
+        const {operarioId} = req.params;
+        
+        // Validar que el ID del operario sea válido
+        if (!mongoose.Types.ObjectId.isValid(operarioId)) {
+            return res.status(400).json({
+                msg: "ID de operario no válido"
+            });
         }
 
-        const reportes = await Reporte.find({ operario: operario._id })
-            .populate('operario', 'username');
-        
+        // Buscar todos los reportes asociados al operario
+        const reportes = await Reporte.find({ operario: operarioId })
+            .populate('operario', 'username')
+           // .sort({ fecha_creacion: -1 }); // Ordenar por fecha de creación descendente
+
+        if (reportes.length === 0) {
+            return res.status(404).json({
+                msg: "No se encontraron reportes para este operario"
+            });
+        }
+
         res.status(200).json(reportes);
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({ msg: 'Error al obtener los reportes' });
+        res.status(500).json({
+            msg: "Error al obtener los reportes del operario"
+        });
     }
 }
 //metodo para modificar el reporte 

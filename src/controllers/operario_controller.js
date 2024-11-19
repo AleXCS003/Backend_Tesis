@@ -8,11 +8,14 @@ const loginOperario = async(req,res)=>{
     const{username,password}=req.body
     if (Object.values(req.body).includes(""))return res.status(400).json 
     ({mgg:"Por favor completa todos los campos"})
-    const OperarioBDD = await Operarios.findOne({username})
+
+    const OperarioBDD = await Operarios.findOne({username}).select("-status -createdAt -updatedAt -__v -token")
 
     if(!OperarioBDD)return res.status(404).json({msg:"Lo sentimos,el usuario no se encuentra registrado "})
+
     const verificarPassword=await OperarioBDD.matchPassword(password)
     if(!verificarPassword)return res.status(404).json({msg:"Lo sentimos, el password no es el correcto"})
+
     const token = generarJWT(OperarioBDD._id,"operario")
     const {username:usernameO,nombre,apellido,telefono,email,estado,_id}=OperarioBDD
     await OperarioBDD.save()
@@ -136,9 +139,9 @@ const perfilOperario =  (req,res) =>{
     
 }
 
-const cambiarContraseñaOperario = async (res,req) =>{
+const cambiarContraseñaOperario = async (req,res) =>{
     try {
-        const operarioId = req.Operarios.id
+        const operarioId = req.operario._id
         const {passwordActual,nuevoPassword, confirmarPassword} = req.body
     // validar que todos los campos esten llenos 
     if (!passwordActual || !nuevoPassword || !confirmarPassword ){
