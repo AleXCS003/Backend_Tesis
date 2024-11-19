@@ -224,7 +224,7 @@ const comprobarTokenContraseñaAdmin =async(req,res) =>{
     try {
         // Obtener token de los parámetros
         const { token } = req.params
-        console.log("Token recibido:", token) // Debug
+        console.log("Token recibido:", token)
 
         // Verificar si hay token
         if (!token) {
@@ -277,33 +277,15 @@ const recuperarContraseñaAdmin = async(req,res) =>{
 
 }
 
-const perfilAdministrador = async (req,res) =>{
+const perfilAdministrador = (req,res) =>{
+    delete req.administrador.createdAt
+    delete req.administrador.updatedAt
+    delete req.administrador.token
+    delete req.administrador.status
+    delete req.administrador.__v
 
-    try {
-        // Verificar si existe req.Administrador
-        if (!req.Administrador) {
-            return res.status(401).json({
-                msg: "No hay administrador autenticado"
-            });
-        }
-
-        const administrador = await Administrador.findById(req.Administrador._id)
-            .select("-password -token -confirmado");
-
-        if (!administrador) {
-            return res.status(404).json({
-                msg: "Administrador no encontrado"
-            });
-        }
-
-        res.json(administrador);
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            msg: "Error al obtener el perfil"
-        });
-    }
+    res.status(200).json(req.administrador)
+    
 }
 
 

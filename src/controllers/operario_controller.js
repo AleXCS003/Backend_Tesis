@@ -125,22 +125,15 @@ const nuevaContraseña =  async(req,res)=>{
 
 }
 
-const perfilOperario =  async(req,res) =>{
-    try {
-        // Verificar que existe el operario en el request
-
-        const operario = await Operarios.findById(req.Operario._id)
-            .select("-password -token");
-
-        res.json(operario);
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            msg: "Error al obtener el perfil del operario"
-        });
-    }
-
+const perfilOperario =  (req,res) =>{
+    delete req.operario.createdAt
+    delete req.operario.updatedAt
+    delete req.operario.token
+    delete req.operario.status
+    delete req.operario.__v
+    
+    res.status(200).json(req.operario)
+    
 }
 
 const cambiarContraseñaOperario = async (res,req) =>{

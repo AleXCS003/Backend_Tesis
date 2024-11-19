@@ -28,7 +28,7 @@ const router = Router ()
  
  
  router.get("/administrador/listar-operarios",verificarAdministrador,listarOperarios)
- router.post("/administrador/registrar-operario",verificarAdministrador,registroOperarios)
+ router.post("/administrador/registrar-operario", verificarAdministrador,registroOperarios)
  router.put("/administrador/actualizar-operario/:id",verificarAdministrador,actualizarOperario)
  router.post("/administrador/estado/:id",verificarAdministrador,cambiarEstadoOperario)
  router.get("/administrador/perfil-admin",verificarAdministrador,perfilAdministrador)
