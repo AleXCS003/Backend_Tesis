@@ -65,7 +65,7 @@ const registroOperarios= async(req,res)=>{
 
     const password = Math.random().toString(36).slice(2)
 
-    nuevoOperario.password = await nuevoOperario.encryPassword(password)
+    nuevoOperario.password = await nuevoOperario.encryptPassword(password)
 
     await sendMailToOperario(email,password,username)
 

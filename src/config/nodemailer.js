@@ -29,7 +29,7 @@ const enviarRestablecimientoContraseña = async(correoUsuario,token) =>{
 
 const sendMailToOperario = async (userMail,password,username)=>{
     let info = await transporter.sendMail({
-    from : 'admin@vet.com',
+    from : 'unidaddebienes24@gmail.com',
     to : userMail,
     subject:"correo de bienvenida",
     html:`
@@ -39,7 +39,7 @@ const sendMailToOperario = async (userMail,password,username)=>{
     <p>Contraseña de acceso: ${password}</p>
     <a href=${process.env.URL_BACKEND}operario/login>Clic para iniciar sesión</a>
     <hr>
-    <footer>La unidade de control de bienes te da la Bienvenida!</footer>
+    <footer>La unidad de control de bienes te da la Bienvenida!</footer>
 
 
     `
