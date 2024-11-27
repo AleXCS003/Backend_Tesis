@@ -10,9 +10,9 @@ import { loginOperario,recuperarContraseña,nuevaContraseña,comprobarTokenContr
 
 //rutas libre
 router.post("/operario/login",loginOperario)
-router.get("/operario/comprobar/:token",comprobarTokenContraseña)
-router.post("/operario/recuperar-password",recuperarContraseña)
-router.post("/operario/nuevo-password/:token",nuevaContraseña)
+router.get("/comprobar/:token",comprobarTokenContraseña)
+router.post("/recuperar-password",recuperarContraseña)
+router.post("/nuevo-password/:token",nuevaContraseña)
 
 //rutas privadas
 router.get("/operario/perfil-operario",verificarAutenticacion,perfilOperario)

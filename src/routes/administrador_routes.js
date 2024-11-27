@@ -22,9 +22,9 @@ const router = Router ()
  //rutas  libres
  router.post("/administrador/register",registroAdministrador)
  router.post("/administrador/loginAdmin",loginAdminController)  
- router.post("/administrador/recuperar-password",recuperarContraseñaAdmin)
- router.get("/administrador/comprobar/:token",comprobarTokenContraseñaAdmin)
- router.post("/administrador/nueva-password/:token", nuevaContraseñaAdmin);
+ router.post("/recuperar-password",recuperarContraseñaAdmin)
+ router.get("/comprobar/:token",comprobarTokenContraseñaAdmin)
+ router.post("/nuevo-password/:token", nuevaContraseñaAdmin);
  
  
  router.get("/administrador/listar-operarios",verificarAdministrador,listarOperarios)
