@@ -3,7 +3,7 @@ import Administrador from "../models/Administrador.js";
 import generarJWT from "../helpers/crearJWT.js";
 import Operarios from "../models/Operarios.js";
 import mongoose from "mongoose";
-import { sendMailToOperario } from "../config/nodemailer.js";
+import { sendMailToOperario ,enviarRestablecimientoContraseña} from "../config/nodemailer.js";
 //endpoint no  se usa en el frontend
 
 const registroAdministrador =  async (req,res) =>{
