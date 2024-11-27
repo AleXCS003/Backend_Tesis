@@ -263,7 +263,7 @@ const recuperarContraseñaAdmin = async(req,res) =>{
         msg:"Lo sentimos debe llenar todos los campos"
     })
     const administrador = await Administrador.findOne({email})
-    if (!operario) return res.status(404).json({
+    if (!administrador) return res.status(404).json({
         msg:"Lo sentimos pero el email que ingreso no esta registrado"
     })
     const token =await administrador.createToken()

@@ -8,8 +8,8 @@ mongoose.set('strictQuery',true)
 //funcion para la conexion 
 const connection  =async()=>{
     try{
-        //const {connection}= await mongoose.connect(process.env.MONGODB_URI)
-        const {connection}= await mongoose.connect(process.env.MONGODB_URI_PRODUCTION)
+        const {connection}= await mongoose.connect(process.env.MONGODB_URI)
+        //const {connection}= await mongoose.connect(process.env.MONGODB_URI_PRODUCTION)
         //MOSTRAR POR CONSOLA
         console.log(`Database is connected on ${connection.host} - ${connection.port} `)
     } catch (error){

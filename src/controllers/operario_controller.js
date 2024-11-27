@@ -111,7 +111,7 @@ const nuevaContraseña =  async(req,res)=>{
             
         const operario = await Operarios.findOne({token: req.params.token})
         
-        if (!administrador) return res.status(404).json({
+        if (!operario) return res.status(404).json({
             msg: "Lo sentimos no hemos podido verificar su cuenta"
         })
 
