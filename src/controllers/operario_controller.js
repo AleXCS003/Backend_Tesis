@@ -34,99 +34,6 @@ const loginOperario = async(req,res)=>{
 
 }
 
-//recuperar contraseña 
-const recuperarContraseña = async(req,res) =>{
-    const {email}= req.body
-    if(Object.values(req.body).includes("")) return res.status(404).json({
-        msg:"Lo sentimos debe llenar todos los campos"
-    })
-    const operario = await Operarios.findOne({email})
-    if (!operario) return res.status(404).json({
-        msg:"Lo sentimos pero el email que ingreso no esta registrado"
-    })
-    const token =await operario.createToken()
-    operario.token=token
-    await enviarRestablecimientoContraseña(email ,token)
-    await operario.save()
-    res.status(200).json({
-        msg:"Revise su correo electronico para reestablecer su contraseña"
-    })
-    
-
-}
-
-
-///confirmar el token para la contraseña 
-const comprobarTokenContraseña =async(req,res) =>{
-    try {
-        // Obtener token de los parámetros
-        const { token } = req.params
-        console.log("Token recibido:", token) // Debug
-
-        // Verificar si hay token
-        if (!token) {
-            return res.status(400).json({
-                msg: "Token no proporcionado"
-            })
-        }
-
-        // Buscar operario con ese token
-        const operario = await Operarios.findOne({ token })
-        console.log("Operario encontrado:", operario) // Debug
-
-        // Verificar si existe el operario y el token coincide
-        if (!operario) {
-            return res.status(404).json({
-                msg: "Token no válido"
-            })
-        }
-
-        // Responder éxito
-        res.status(200).json({
-            msg: "Token confirmado, puede crear la nueva contraseña"
-        })
-
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({
-            msg: "Error al validar el token"
-        })
-    }
-}
-
-
-//actualizar contraseña
-
-const nuevaContraseña =  async(req,res)=>{
-    try {
-        const {password, confirmarPassword} = req.body
-        
-        if(Object.values(req.body).includes("")) return res.status(404).json({
-            msg: "Lo sentimos debe completar todos los campos"
-        })
-        
-        if (password !== confirmarPassword) return res.status(400).json({
-            msg: "Las contraseñas no coinciden"
-        })
-            
-        const operario = await Operarios.findOne({token: req.params.token})
-        
-        if (!operario) return res.status(404).json({
-            msg: "Lo sentimos no hemos podido verificar su cuenta"
-        })
-
-        operario.token = null
-        operario.password = await operario.encryptPassword(password)
-        await operario.save()
-
-        res.status(200).json({msg: "Contraseña actualizada con éxito"})
-        
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({msg: "Hubo un error al actualizar la contraseña"})
-    }
-
-}
 
 const perfilOperario =  (req,res) =>{
     delete req.operario.createdAt
@@ -184,9 +91,6 @@ const cambiarContraseñaOperario = async (req,res) =>{
 
 export {
     loginOperario,
-    recuperarContraseña,
-    comprobarTokenContraseña,
-    nuevaContraseña,
     perfilOperario,
     cambiarContraseñaOperario
 }

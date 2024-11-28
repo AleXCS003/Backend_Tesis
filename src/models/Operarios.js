@@ -41,6 +41,11 @@ const operarioSchema= new Schema({
         default:true,
         require:false,
     },
+    token:{
+        type:String,
+        default:null,
+        trim:true
+    },
     
 },{
     timestamps:true

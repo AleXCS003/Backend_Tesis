@@ -2,7 +2,7 @@ import { Router } from "express";
 import verificarAutenticacion from "../middlewares/autenticacion.js";
 const router = Router ()
 
-import { loginOperario,recuperarContraseña,nuevaContraseña,comprobarTokenContraseña,perfilOperario,cambiarContraseñaOperario
+import { loginOperario,perfilOperario,cambiarContraseñaOperario
 
  } from "../controllers/operario_controller.js";
 
@@ -10,9 +10,6 @@ import { loginOperario,recuperarContraseña,nuevaContraseña,comprobarTokenContr
 
 //rutas libre
 router.post("/operario/login",loginOperario)
-router.get("/comprobar/:token",comprobarTokenContraseña)
-router.post("/recuperar-password",recuperarContraseña)
-router.post("/nuevo-password/:token",nuevaContraseña)
 
 //rutas privadas
 router.get("/operario/perfil-operario",verificarAutenticacion,perfilOperario)
