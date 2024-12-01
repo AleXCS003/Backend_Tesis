@@ -61,11 +61,11 @@ const reporteSchema = new Schema({
             return this.estado === 'firmado'  // Archivo obligatorio solo si estado es 'firmado'
         }  
      },
-    /* Dependencia: {
+    Nueva_dependencia: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Dependencia',
         require: true
-    },*/
+    },
     operario: {
         type: mongoose.Schema.Types.ObjectId,
         //type: String,
