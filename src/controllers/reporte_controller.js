@@ -194,7 +194,7 @@ const actualizarReporte = async (req, res) => {
             id,
             datosActualizacion,
             { new: true }
-        );
+        ).populate('Dependencia','nombre').populate('operario','username');
 
         res.status(200).json({
             msg: "Actualización exitosa del reporte",
@@ -277,7 +277,7 @@ const actualizarReporteOperario = async (req, res) => {
             {
                 new: true,
                 runValidators: true
-            }
+            }.populate('Dependencia','nombre').populate('operario','username')
         )
         res.status(200).json({
             msg: "Actualización exitosa del reporte",
