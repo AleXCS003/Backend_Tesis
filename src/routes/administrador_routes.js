@@ -26,7 +26,7 @@ const router = Router ()
  router.get("/comprobar/:token",comprobarTokenContraseñaUsuario)
  router.post("/nuevo-password/:token", nuevaContraseñaUsuario);
  
- 
+  //rutas  privadas
  router.get("/administrador/listar-operarios",verificarAdministrador,listarOperarios)
  router.post("/administrador/registrar-operario",verificarAdministrador,registroOperarios)
  router.put("/administrador/actualizar-operario/:id",verificarAdministrador,actualizarOperario)

@@ -14,7 +14,7 @@ const loginOperario = async(req,res)=>{
     if(!OperarioBDD)return res.status(404).json({msg:"Lo sentimos,el usuario no se encuentra registrado "})
 
     const verificarPassword=await OperarioBDD.matchPassword(password)
-    if(!verificarPassword)return res.status(404).json({msg:"Lo sentimos, el password no es el correcto"})
+    if(!verificarPassword)return res.status(404).json({msg:"Lo sentimos la contraseña es incorrecta"})
 
     const token = generarJWT(OperarioBDD._id,"operario")
     const {username:usernameO,nombre,apellido,telefono,email,estado,_id}=OperarioBDD

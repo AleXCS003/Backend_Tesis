@@ -16,19 +16,19 @@ import { registrarReporte,
 
  } from "../controllers/reporte_controller.js";
 
-//endopoints para administrador
+//rutas para administrador
 
 router.get("/reporte/listar-reportes",verificarAdministrador,listarReporte)
 router.post("/reporte/registrar-reporte",upload.single('archivo'),verificarAdministrador,registrarReporte)
 router.put("/reporte/actualizar-reporte/:id",upload.single('archivo'),verificarAdministrador,actualizarReporte)
+router.get("/reporte/filtar-reporte-administrador",verificarAdministrador,filtrarReportes)
 
 
-//endpoints para operario
+//rutas para operario
 router.post("/reporte/registrar-reporte-operario",upload.single('archivo'),verificarAutenticacion,registrarReporteOperario)
 router.get("/reporte/listar-reporte-operario/:operarioId",verificarAutenticacion,listarReportesOperario)
 router.put("/reporte/actualizar-reporte-operario/:id",upload.single('archivo'),verificarAutenticacion,actualizarReporteOperario)    
+router.get("/reporte/filtar-reporte-operario",verificarAutenticacion,filtrarReportes)
 
-//rutas libres
-router.get("/reporte/filtar-reporte",filtrarReportes)
 
 export default router

@@ -20,7 +20,8 @@ const enviarRestablecimientoContraseña = async(correoUsuario,token) =>{
       subject: "Recupera tu Contraseña",
       html: `<h1>Sistema de gestión</h1>
       <hr>
-      <p>Haz click <a href=${process.env.URL_BACKEND}usuarios/recuperar-password/${token}>aqui</a> para restablecer tu contraseña</p>`  
+      <p>Haz click <a href=${process.env.URL_BACKEND}/nuevo-password/${token}>aqui</a> para restablecer tu contraseña</p>`
+     
     })
 
 
@@ -37,7 +38,7 @@ const sendMailToOperario = async (userMail,password,username)=>{
     <hr>
     <p>usuario de acceso: ${username}</p>
     <p>Contraseña de acceso: ${password}</p>
-    <a href=${process.env.URL_BACKEND}operario/login>Clic para iniciar sesión</a>
+    <a href=${process.env.URL_BACKEND}/login>Clic para iniciar sesión</a>
     <hr>
     <footer>La unidad de control de bienes te da la Bienvenida!</footer>
 
@@ -45,6 +46,6 @@ const sendMailToOperario = async (userMail,password,username)=>{
     `
 
     });
-    console.log("mesaje enviado satisfactoriamente",info.messageId);
+    console.log("mensaje enviado satisfactoriamente",info.messageId);
 }
 export { enviarRestablecimientoContraseña,sendMailToOperario}

@@ -7,7 +7,7 @@ import { sendMailToOperario, enviarRestablecimientoContraseña } from "../config
 //endpoint no  se usa en el frontend
 
 const registroAdministrador = async (req, res) => {
-    const { username, email, password, nombre, apellido } = req.body
+    const { username, email, password} = req.body
     if (Object.values(req.body).includes("")) return res.status(400).json
         ({ mgg: "Por favor completa todos los campos" })
 
@@ -31,7 +31,7 @@ const loginAdminController = async (req, res) => {
     if (!administradorEncontrado) return res.status(404).json({ msg: "El usuario es incorrecto,inténtalo nuevamente " })
 
     const confirmarPassword = await administradorEncontrado.matchPassword(password)
-    if (!confirmarPassword) return res.status(404).json({ msg: "Contraseña es incorrecta" })
+    if (!confirmarPassword) return res.status(404).json({ msg: " Lo sentimos la contraseña es incorrecta" })
 
     //pendiente 
     const token = generarJWT(administradorEncontrado._id, "administrador")
@@ -288,7 +288,7 @@ const nuevaContraseñaUsuario = async (req, res) => {
 
         // Verificar que las contraseñas coincidan
         if (password !== confirmarPassword) {
-            return res.status(400).json({ msg: "Lo sentimos, pero las contraseñas no coinciden" });
+            return res.status(400).json({ msg: "Lo sentimos,las contraseñas nuevas no coinciden" });
         }
 
         // Buscar en ambos modelos usando el token
