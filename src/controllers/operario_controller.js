@@ -12,7 +12,7 @@ const loginOperario = async(req,res)=>{
     const OperarioBDD = await Operarios.findOne({username}).select("-status -createdAt -updatedAt -__v -token")
 
     if(!OperarioBDD)return res.status(404).json({msg:"Lo sentimos,el usuario no se encuentra registrado "})
-
+    if (!OperarioBDD.estado) {return res.status(403).json({ msg: "Usuario deshabilitado" });}
     const verificarPassword=await OperarioBDD.matchPassword(password)
     if(!verificarPassword)return res.status(404).json({msg:"Lo sentimos la contraseña es incorrecta"})
 
