@@ -129,7 +129,7 @@ const registrarReporteOperario = async (req, res) => {
 }*/
 const listarReporte = async (req, res) => {
     try {
-        const reportes = await Reporte.find().populate('Dependencia', 'nombre');
+        const reportes = await Reporte.find().populate('Dependencia', 'nombre').populate('operario', 'username');
         res.status(200).json(reportes);
     } catch (error) {
         console.log(error);
@@ -151,8 +151,8 @@ const listarReportesOperario = async (req, res) => {
         }
 
         // Buscar todos los reportes asociados al operario
-        const reportes = await Reporte.find({ operario: operarioId })
-            .populate('operario', 'username')
+        const reportes = await Reporte.find({ operario: operarioId }).populate('Dependencia', 'nombre');
+        /*.populate('operario', 'username')*/
         // .sort({ fecha_creacion: -1 }); // Ordenar por fecha de creación descendente
 
         if (reportes.length === 0) {
