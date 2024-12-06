@@ -120,13 +120,7 @@ const registrarReporteOperario = async (req, res) => {
 }
 
 // metodo para listar todos los reportes 
-/*const listarReporte = async(req,res)=>{
 
-    const reportes = await Reporte.find()
-    res.status(200).json(reportes)
-
-
-}*/
 const listarReporte = async (req, res) => {
     try {
         const reportes = await Reporte.find().populate('Dependencia', 'nombre').populate('operario', 'username');
