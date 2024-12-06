@@ -171,6 +171,11 @@ const actualizarReporte = async (req, res) => {
         const { id } = req.params;
         const datosActualizacion = { ...req.body };
 
+         // Incluir Dependencia si está presente
+         if (req.body.dependencias) {
+            datosActualizacion.Dependencia = req.body.dependencias;
+        }
+
         // Validar que exista el reporte
         const reporteExiste = await Reporte.findById(id);
         if (!reporteExiste) {
