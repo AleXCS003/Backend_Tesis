@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import Reporte from "../models/Reporte.js";
 import Operarios from "../models/Operarios.js";
 import Administrador from "../models/Administrador.js";
+import fs from "fs"
 
 //metodo para  crear un reporte 
 const registrarReporte = async (req, res) => {
@@ -31,6 +32,11 @@ const registrarReporte = async (req, res) => {
         // Verificar si ya existe el reporte
         const reporteExistente = await Reporte.findOne({ numero_acta })
         if (reporteExistente) {
+            if(req.file){
+                fs.unlink(req.file.path,(err) =>{
+                    if(err)console.error("Error al eliminar" .err)
+                });
+            }
             return res.status(400).json({
                 msg: "Lo sentimos, este reporte ya se encuentra registrado"
             })
@@ -95,6 +101,11 @@ const registrarReporteOperario = async (req, res) => {
         // Verificar si ya existe el reporte
         const reporteExistente = await Reporte.findOne({ numero_acta })
         if (reporteExistente) {
+            if(req.file){
+                fs.unlink(req.file.path,(err) =>{
+                    if(err)console.error("Error al eliminar" .err)
+                });
+            }
             return res.status(400).json({
                 msg: "Lo sentimos, este reporte ya se encuentra registrado"
             })
@@ -323,7 +334,7 @@ const actualizarReporteOperario = async (req, res) => {
 const   filtrarReportes = async (req, res) => {
     try {
 
-        const { numero_acta, fecha_inicio, fecha_fin } = req.query;
+        const { numero_acta, fecha_inicio, fecha_fin } = req.body;
 
         const filter = {};
 
