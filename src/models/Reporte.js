@@ -66,6 +66,10 @@ const reporteSchema = new Schema({
         //type: String,
         ref: 'Operarios'
         },
-    
+    administrador: {
+        type: mongoose.Schema.Types.ObjectId,
+        //type: String,
+        ref: 'administradores'
+        },
 });
 export default model ('Reporte',reporteSchema);

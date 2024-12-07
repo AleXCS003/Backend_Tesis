@@ -132,19 +132,29 @@ const actualizarOperario = async (req, res) => {
 //deshabilitar operarios 
 const cambiarEstadoOperario = async (req, res) => {
     const { id } = req.params
+    const { estado } = req.body
 
     if (!id) return res.status(400).json({
         msg: "Lo sentimos, el ID es requerido"
     })
+    if (estado === undefined) return res.status(400).json({
+        msg: "Lo sentimos, el estado es requerido"
+    });
 
-    if (Object.values(req.body).includes("")) return res.status(400).json(
-        { msg: "Lo sentimos debe completar todos los campos" })
-    console.log("id:", id)
     if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).json({
         msg: "Lo sentimos el id proporcionado no existe"
-    })
-    await Operarios.findByIdAndUpdate(id, { estado: false })
-    res.status(200).json({ msg: "Estado del usuario modificado exitosamente" })
+    });
+
+    try {
+        await Operarios.findByIdAndUpdate(id, { estado: false })
+        res.status(200).json({ msg: "Estado del usuario modificado exitosamente" });
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: "Error al cambiar el estado del usuario" });
+        
+    }
+    
 }
 
 

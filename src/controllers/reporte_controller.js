@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
 import Reporte from "../models/Reporte.js";
 import Operarios from "../models/Operarios.js";
+import Administrador from "../models/Administrador.js";
 
 //metodo para  crear un reporte 
 const registrarReporte = async (req, res) => {
     try {
-        const { numero_acta, estado } = req.body
+        const { numero_acta, estado ,adminId} = req.body
 
         // Validar campos requeridos
         if (Object.values(req.body).includes("")) {
@@ -13,6 +14,19 @@ const registrarReporte = async (req, res) => {
                 msg: "Lo sentimos, debe completar todos los campos"
             })
         }
+        if (!mongoose.Types.ObjectId.isValid(adminId)) {
+            return res.status(400).json({
+                msg: "ID de operario no válido"
+            });
+        }
+
+        const administradorExiste = await Administrador.findById(adminId);
+        if (!administradorExiste) {
+            return res.status(404).json({
+                msg: "El administrador no existe"
+            });
+        }
+
 
         // Verificar si ya existe el reporte
         const reporteExistente = await Reporte.findOne({ numero_acta })
@@ -35,7 +49,7 @@ const registrarReporte = async (req, res) => {
         const nuevoReporte = new Reporte({
             ...req.body,
             archivo: req.file ? req.file.path : null,
-            Administrador: req.administrador._id, // ID del admin que crea el reporte
+            administrador: adminId, // ID del admin que crea el reporte
             Dependencia: req.body.dependencias,
             fecha_creacion: Date.now()
         })
@@ -123,7 +137,17 @@ const registrarReporteOperario = async (req, res) => {
 
 const listarReporte = async (req, res) => {
     try {
-        const reportes = await Reporte.find().populate('Dependencia', 'nombre').populate('operario', 'username');
+        const { adminId } = req.params;
+
+        // Validar que el ID del administrador sea válido
+        if (!mongoose.Types.ObjectId.isValid(adminId)) {
+            return res.status(400).json({
+                msg: "ID de administrador no válido"
+            });
+        }
+        const reportes = await Reporte.find().populate('Dependencia', 'nombre')
+        .populate('administrador', 'username')
+        .populate('operario', 'username');
         res.status(200).json(reportes);
     } catch (error) {
         console.log(error);
@@ -146,7 +170,7 @@ const listarReportesOperario = async (req, res) => {
 
         // Buscar todos los reportes asociados al operario
         const reportes = await Reporte.find({ operario: operarioId }).populate('Dependencia', 'nombre');
-        /*.populate('operario', 'username')*/
+        /**/
         // .sort({ fecha_creacion: -1 }); // Ordenar por fecha de creación descendente
 
         if (reportes.length === 0) {

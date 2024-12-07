@@ -18,7 +18,7 @@ import { registrarReporte,
 
 //rutas para administrador
 
-router.get("/reporte/listar-reportes",verificarAdministrador,listarReporte)
+router.get("/reporte/listar-reportes/:adminId",verificarAdministrador,listarReporte)
 router.post("/reporte/registrar-reporte",upload.single('archivo'),verificarAdministrador,registrarReporte)
 router.put("/reporte/actualizar-reporte/:id",upload.single('archivo'),verificarAdministrador,actualizarReporte)
 router.get("/reporte/filtrar-reporte-administrador",verificarAdministrador,filtrarReportes)
