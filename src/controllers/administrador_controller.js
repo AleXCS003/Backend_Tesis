@@ -146,7 +146,7 @@ const cambiarEstadoOperario = async (req, res) => {
     });
 
     try {
-        await Operarios.findByIdAndUpdate(id, { estado: false })
+        await Operarios.findByIdAndUpdate(id, { estado })
         res.status(200).json({ msg: "Estado del usuario modificado exitosamente" });
         
     } catch (error) {
