@@ -323,7 +323,7 @@ const actualizarReporteOperario = async (req, res) => {
 const   filtrarReportes = async (req, res) => {
     try {
 
-        const { numero_acta, fecha_inicio, fecha_fin } = req.body;
+        const { numero_acta, fecha_inicio, fecha_fin } = req.query;
 
         const filter = {};
 
