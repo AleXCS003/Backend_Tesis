@@ -12,7 +12,8 @@ import { registrarReporte,
     actualizarReporte, 
     listarReporte,
     registrarReporteOperario,
-    listarReportesOperario
+    listarReportesOperario,
+    obtenerPDF
 
  } from "../controllers/reporte_controller.js";
 
@@ -30,5 +31,7 @@ router.get("/reporte/listar-reporte-operario/:operarioId",verificarAutenticacion
 router.put("/reporte/actualizar-reporte-operario/:id",upload.single('archivo'),verificarAutenticacion,actualizarReporteOperario)    
 router.get("/reporte/filtrar-reporte-operario",verificarAutenticacion,filtrarReportes)
 
+//ruta libre
+router.get("/reporte/pdf/:id",obtenerPDF)
 
 export default router

@@ -67,6 +67,11 @@ const registrarReporte = async (req, res) => {
         })
 
     } catch (error) {
+        if(req.file){
+            fs.unlink(req.file.path,(err) =>{
+                if(err)console.error("Error al eliminar" .err)
+            });
+        }
         console.log(error)
         res.status(500).json({
             msg: "Error al registrar el reporte"
@@ -136,6 +141,11 @@ const registrarReporteOperario = async (req, res) => {
         })
 
     } catch (error) {
+        if(req.file){
+            fs.unlink(req.file.path,(err) =>{
+                if(err)console.error("Error al eliminar" .err)
+            });
+        }
         console.log(error)
         res.status(500).json({
             msg: "Error al registrar el reporte"
@@ -220,7 +230,17 @@ const actualizarReporte = async (req, res) => {
         }
         // Si hay un archivo nuevo, actualizamos la ruta
         if (req.file) {
-            datosActualizacion.archivo = req.file.filename;
+            if (reporteExiste.archivo) {
+                fs.unlink(reporteExiste.archivo, (err) => {
+                    if (err) {
+                        console.error("Error al eliminar el archivo anterior:", err);
+                    }
+                });
+            }
+            
+            datosActualizacion.archivo = req.file.path; 
+        } else {
+            datosActualizacion.archivo = reporteExiste.archivo;
         }
 
         // Actualizar el reporte incluyendo el archivo si existe
@@ -236,6 +256,11 @@ const actualizarReporte = async (req, res) => {
         });
 
     } catch (error) {
+        if(req.file){
+            fs.unlink(req.file.path,(err) =>{
+                if(err)console.error("Error al eliminar" .err)
+            });
+        }
         console.log(error);
         res.status(500).json({
             msg: "Error al actualizar el reporte"
@@ -287,8 +312,7 @@ const actualizarReporteOperario = async (req, res) => {
                 msg: "Debe cargar un archivo para el estado firmado"
             })
         }
-
-
+        
         const fechaCreacion = reporteActual._id.getTimestamp()
         const fechaLimite = new Date(fechaCreacion.getTime() + 2 * 60000) // 5 minutos en milisegundos
         const ahora = new Date()
@@ -319,6 +343,12 @@ const actualizarReporteOperario = async (req, res) => {
         })
 
     } catch (error) {
+        if(req.file){
+            fs.unlink(req.file.path,(err) =>{
+                if(err)console.error("Error al eliminar" .err)
+            });
+        }
+        
         console.log(error)
         res.status(500).json({
             msg: "Error al actualizar el reporte"
@@ -374,6 +404,22 @@ const   filtrarReportes = async (req, res) => {
     }
 }
 
+//obtener reporte 
+const obtenerPDF = async (req,res) =>{
+    const {id} = req.params;
+    try {
+        const reporte =await Reporte.findById(id);
+        if (!reporte || !reporte.archivo){
+            return res.status(404).json({msg:"Reporte no encontrado"})
+        }
+        //Enviar el archivo
+        res.sendFile(reporte.archivo,{ root:'.'})
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg:"Error al obtener el PDF"})
+    }  
+    }
 
 export {
     registrarReporte,
@@ -382,5 +428,6 @@ export {
     actualizarReporteOperario,
     actualizarReporte,
     registrarReporteOperario,
-    listarReportesOperario
+    listarReportesOperario,
+    obtenerPDF
 }
