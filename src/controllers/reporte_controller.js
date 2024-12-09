@@ -229,7 +229,7 @@ const actualizarReporte = async (req, res) => {
     const eliminarPDF = () => {
         if (req.file) {
             fs.unlink(req.file.path, (err) => {
-                if (err) console.error("Error al eliminar".err)
+                if (err) console.error("Error al eliminar.".err)
             });
         }
     }
