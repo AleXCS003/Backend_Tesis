@@ -38,7 +38,7 @@ const sendMailToOperario = async (userMail,password,username)=>{
     <hr>
     <p>usuario de acceso: ${username}</p>
     <p>Contraseña de acceso: ${password}</p>
-    <a href=${process.env.URL_FRONTEND}/login>Clic para iniciar sesión</a>
+    <a href=${process.env.URL_FRONTEND_PRODUCTION}/login>Clic para iniciar sesión</a>
     <hr>
     <footer>La unidad de control de bienes te da la Bienvenida!</footer>
 
