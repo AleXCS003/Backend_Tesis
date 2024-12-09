@@ -20,7 +20,7 @@ const enviarRestablecimientoContraseña = async(correoUsuario,token) =>{
       subject: "Recupera tu Contraseña",
       html: `<h1>Sistema de gestión</h1>
       <hr>
-      <p>Haz click <a href=${process.env.URL_FRONTEND}/nuevo-password/${token}>aqui</a> para restablecer tu contraseña</p>`
+      <p>Haz click <a href=${process.env.URL_FRONTEND_PRODUCTION}nuevo-password/${token}>aqui</a> para restablecer tu contraseña</p>`
      
     })
 
