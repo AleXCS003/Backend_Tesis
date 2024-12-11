@@ -20,10 +20,12 @@ const operarioSchema= new Schema({
         trim:true
         
     },
-    telefono:{
+    extension:{
         type:Number,
         trim:true,
-        default:null
+        default:null,
+        unique:true,
+        trim:true
     },
     email:{
         type:String,

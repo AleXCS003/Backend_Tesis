@@ -21,6 +21,13 @@ const adminSchema= new Schema({
         trim:true
         
     },
+    extension:{
+        type:Number,
+        trim:true,
+        default:null,
+        unique:true,
+        trim:true
+    },
     email:{
         type:String,
         require:true,
