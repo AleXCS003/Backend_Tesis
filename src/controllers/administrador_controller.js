@@ -51,7 +51,7 @@ const loginAdminController = async (req, res) => {
 
 //Registrar Operarios
 const registroOperarios = async (req, res) => {
-    const { username, email } = req.body
+    const { username, email ,extension} = req.body
 
     if (Object.values(req.body).includes("")) return res.status(404).json({
         msg: "Lo sentimos debe completar todos los campos "
@@ -60,8 +60,11 @@ const registroOperarios = async (req, res) => {
     const operario = await Operarios.findOne({
         $or: [{ username }, { email }]
     })
-    if (operario) return res.status(404).json({ msg: "Lo sentimos ya se encuentra registrado este operario" }
+    if (operario) return res.status(404).json({ msg: "Lo sentimos ya se encuentra registrado este operario con este Username o Email" }
     )
+    const extensionExiste = await Operarios.findOne({extension})
+    if (extensionExiste) return res.status(404).json({msg:" Lo sentimos esta extension ya existe"})
+
 
     const nuevoOperario = new Operarios(req.body)
 
@@ -105,6 +108,21 @@ const actualizarOperario = async (req, res) => {
         if (!operarioExiste) {
             return res.status(404).json({
                 msg: `No existe el operario con ID: ${id}`
+            });
+        }
+        //verificar si el email ,username o extension ya existe la BDD
+        const { email, username, extension } = req.body;
+        const operarioDuplicado = await Operarios.findOne({
+            $or: [
+                { email, _id: { $ne: id } },
+                { username, _id: { $ne: id } },
+                { extension, _id: { $ne: id } }
+            ]
+        });
+
+        if (operarioDuplicado) {
+            return res.status(400).json({
+                msg: "El email, username o extension ya existen"
             });
         }
 
