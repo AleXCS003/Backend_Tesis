@@ -17,7 +17,7 @@ const loginOperario = async(req,res)=>{
     if(!verificarPassword)return res.status(404).json({msg:"Lo sentimos la contraseña es incorrecta"})
 
     const token = generarJWT(OperarioBDD._id,"operario")
-    const {username:usernameO,nombre,apellido,telefono,email,estado,_id}=OperarioBDD
+    const {username:usernameO,nombre,apellido,extension,email,estado,_id}=OperarioBDD
     await OperarioBDD.save()
 
     res.status(200).json({
@@ -25,7 +25,7 @@ const loginOperario = async(req,res)=>{
         usernameO,
         nombre,
         apellido,
-        telefono,
+        extension,
         email,
         estado,
         _id

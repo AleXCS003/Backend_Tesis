@@ -42,6 +42,7 @@ const loginAdminController = async (req, res) => {
         username: administradorEncontrado.username,
         nombre,
         apellido,
+        extension,
         token,
         email,
         token
