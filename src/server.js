@@ -14,16 +14,21 @@ import routerDependencia from './routes/dependencia_routes.js'
 const app = express()
 dotenv.config()
 
-//configuraciones 
-app.set('port',process.env.port || 3000)
+//Configuraciones CORS
 app.use(cors({
-  origin:
-    'https://componente-frontend-tic.vercel.app',
-  methods:
-    ['GET','POST','PUT','DELETE'],
+  origin: 'https://componente-frontend-tic.vercel.app',
+  methods: ['GET','POST','PUT','DELETE'],
   credentials: true
 }))
 
+app.options('*',cors({
+  origin: 'https://componente-frontend-tic.vercel.app',
+  methods: ['GET','POST','PUT','DELETE'],
+  credentials: true
+}))
+
+//configuraciones 
+app.set('port',process.env.port || 3000)
 
 //
 app.use(express.json ())
