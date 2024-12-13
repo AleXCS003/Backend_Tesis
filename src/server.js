@@ -8,8 +8,6 @@ import routerDependencia from './routes/dependencia_routes.js'
 
 
 
-
-
 //inicializaciones 
 const app = express()
 dotenv.config()
