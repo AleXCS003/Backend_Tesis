@@ -16,13 +16,13 @@ dotenv.config()
 
 //Configuraciones CORS
 app.use(cors({
-  origin: 'https://componente-frontend-tic.vercel.app',
+  origin: 'https://componente-frontend-tic.vercel.app/',
   methods: ['GET','POST','PUT','DELETE'],
   credentials: true
 }))
 
 app.options('*',cors({
-  origin: 'https://componente-frontend-tic.vercel.app',
+  origin: 'https://componente-frontend-tic.vercel.app/',
   methods: ['GET','POST','PUT','DELETE'],
   credentials: true
 }))
