@@ -419,7 +419,7 @@ const actualizarReporteOperario = async (req, res) => {
 const filtrarReportes = async (req, res) => {
     try {
 
-        const { numero_acta, fecha_inicio, fecha_fin } = req.query;
+        const { numero_acta, fecha_inicio, fecha_fin ,estado} = req.query;
 
         const filter = {};
 
@@ -438,14 +438,21 @@ const filtrarReportes = async (req, res) => {
                 $lte: endDate
             };
         }
+        // Filtrar por estado
+        if (estado && ['firmado', 'pendiente'].includes(estado.toLowerCase())) {
+            filter.estado = estado.toLowerCase();
+        }
 
+        //filtrar por tipo de usuario 
         if (req.operario) {
             filter.operario = req.operario._id; // Filtrar solo los reportes del operario
         } else if (req.administrador) {
             // Si es administrador, no se aplica ningún filtro adicional
         }
 
-        const reportes = await Reporte.find(filter).populate('Dependencia', 'nombre').populate('operario', 'username');
+        const reportes = await Reporte.find(filter).populate('Dependencia', 'nombre')
+        .populate('administrador', 'username')
+        .populate('operario', 'username');
 
         if (reportes.length === 0) {
             return res.status(404).json({ msg: "No se encontraron reportes" });

@@ -35,7 +35,7 @@ const loginAdminController = async (req, res) => {
 
     //pendiente 
     const token = generarJWT(administradorEncontrado._id, "administrador")
-    const { _id, nombre, apellido, email } = administradorEncontrado
+    const { _id, nombre, apellido, email,extension } = administradorEncontrado
     await administradorEncontrado.save()
     res.status(200).send({
         _id,
@@ -44,8 +44,7 @@ const loginAdminController = async (req, res) => {
         apellido,
         extension,
         token,
-        email,
-        token
+        email
     })
 
 }
