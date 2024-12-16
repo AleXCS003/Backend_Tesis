@@ -419,13 +419,13 @@ const actualizarReporteOperario = async (req, res) => {
 const filtrarReportes = async (req, res) => {
     try {
 
-        const { numero_acta, fecha_inicio, fecha_fin ,estado} = req.query;
+        const { numero_acta, fecha_inicio, fecha_fin ,estado} = req.query ;
 
         const filter = {};
 
         // Filtrar por número de acta
-        if (numero_acta && numero_acta.trim()) {
-            filter.numero_acta = new RegExp(numero_acta, 'i');
+        if (numero_acta) {
+            filter.numero_acta = Number(numero_acta);
         }
 
         if (fecha_inicio && fecha_fin) {
