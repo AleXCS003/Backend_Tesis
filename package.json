@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "test": "jest --runInBand --detectOpenHandles --verbose ./tests/administrador.test.js"
+    "test": "jest --runInBand --detectOpenHandles --verbose ./tests/reporte.test.js"
   },
   "keywords": [],
   "author": "",

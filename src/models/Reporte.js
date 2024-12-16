@@ -2,7 +2,7 @@ import mongoose ,{Schema,model} from "mongoose"
 
 const reporteSchema = new Schema({
     numero_acta:{
-        type:String,
+        type:Number,
         require:true,
         trim:true,
         unique:true
