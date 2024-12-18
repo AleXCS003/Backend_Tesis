@@ -1,6 +1,6 @@
-import app from './server.js'
+import app from './src/server.js'
 //importar la conexion de database.js
-import connection from './database.js'
+import connection from './src/database.js'
 
 connection()
 
