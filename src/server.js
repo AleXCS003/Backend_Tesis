@@ -13,17 +13,8 @@ const app = express()
 dotenv.config()
 
 //Configuraciones CORS
-app.use(cors({
-  origin: 'https://componente-frontend-tic.vercel.app/',
-  methods: ['GET','POST','PUT','DELETE'],
-  credentials: true
-}))
+app.use(cors())
 
-app.options('*',cors({
-  origin: 'https://componente-frontend-tic.vercel.app/',
-  methods: ['GET','POST','PUT','DELETE'],
-  credentials: true
-}))
 
 //configuraciones 
 app.set('port',process.env.port || 3000)
