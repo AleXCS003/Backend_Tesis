@@ -1,30 +1,8 @@
 import multer from "multer";
-import path from "path"
-import fs from "fs"
+//import path from "path"
+//import fs from "fs"
 
-const uploadDir = '/tmp/'
-if (!fs.existsSync(uploadDir)){
-    fs.mkdirSync(uploadDir);
-}
-
-const storage = multer.diskStorage({
-
-    destination: (req, file, cb) => {
-        cb(null, uploadDir); 
-    },
-    filename: (req, file, cb) => {
-        const filePath = path.join(uploadDir, file.originalname);
-
-        // Verificar si el archivo ya existe para evitar sobrescrituras
-        if (fs.existsSync(filePath)) {
-            const extension = path.extname(file.originalname); //
-            const baseName = path.basename(file.originalname, extension); 
-            cb(null, `${baseName}-${Date.now()}${extension}`);
-        } else {
-            cb(null, file.originalname);
-        }
-    },
-});
+const storage = multer.memoryStorage();
 
 const fileFilter = (req,file,cb) =>{
     const allowedTypes = ['application/pdf']

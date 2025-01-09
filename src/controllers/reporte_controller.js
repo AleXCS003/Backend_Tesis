@@ -2,22 +2,12 @@ import mongoose from "mongoose";
 import Reporte from "../models/Reporte.js";
 import Operarios from "../models/Operarios.js";
 import Administrador from "../models/Administrador.js";
-import fs from "fs"
+//import fs from "fs"
 
 
 
 //metodo para  crear un reporte 
 const registrarReporte = async (req, res) => {
-
-    //funcion que permite borrar un archivo de la carpeta uploads
-    //actua en conjunto a una  validacion que se puede reutilizar en otros metodos 
-    const eliminarPDF = () => {
-        if (req.file) {
-            fs.unlink(req.file.path, (err) => {
-                if (err) console.error("Error al eliminar".err)
-            });
-        }
-    }
 
     try {
 
@@ -25,14 +15,14 @@ const registrarReporte = async (req, res) => {
 
         // Validar campos requeridos
         if (Object.values(req.body).includes("")) {
-            eliminarPDF()
+            
             return res.status(400).json({
 
                 msg: "Lo sentimos, debe completar todos los campos"
             })
         }
         if (!mongoose.Types.ObjectId.isValid(adminId)) {
-            eliminarPDF()
+            
             return res.status(400).json({
                 msg: "ID de administrador no válido"
             });
@@ -40,7 +30,7 @@ const registrarReporte = async (req, res) => {
 
         const administradorExiste = await Administrador.findById(adminId);
         if (!administradorExiste) {
-            eliminarPDF()
+            
             return res.status(404).json({
                 msg: "El administrador no existe"
             });
@@ -50,7 +40,7 @@ const registrarReporte = async (req, res) => {
         // Verificar si ya existe el reporte
         const reporteExistente = await Reporte.findOne({ numero_acta })
         if (reporteExistente) {
-            eliminarPDF()
+            
             return res.status(400).json({
                 msg: "Lo sentimos, este reporte ya se encuentra registrado"
             })
@@ -64,11 +54,25 @@ const registrarReporte = async (req, res) => {
                 })
             }
         }
+        let archivoUrl = null;
+        if (req.file) {
+            // Convertir el buffer a base64
+            const b64 = Buffer.from(req.file.buffer).toString('base64');
+            const dataURI = `data:${req.file.mimetype};base64,${b64}`;
+            
+            // Subir a Cloudinary
+            const resultado = await cloudinary.uploader.upload(dataURI, {
+                resource_type: 'raw',
+                format: 'pdf',
+                folder: 'reportes' 
+            });
+            archivoUrl = resultado.secure_url;
+        }
 
         // Crear nuevo reporte
         const nuevoReporte = new Reporte({
             ...req.body,
-            archivo: req.file ? req.file.path : null,
+            archivo: archivoUrl,
             administrador: adminId, // ID del admin que crea el reporte
             Dependencia: req.body.dependencias,
             fecha_creacion: Date.now()
@@ -81,7 +85,6 @@ const registrarReporte = async (req, res) => {
         })
 
     } catch (error) {
-        eliminarPDF()
         console.log(error)
         res.status(500).json({
             msg: "Error al registrar el reporte"
@@ -90,27 +93,19 @@ const registrarReporte = async (req, res) => {
 }
 
 const registrarReporteOperario = async (req, res) => {
-    const eliminarPDF = () => {
-        if (req.file) {
-            fs.unlink(req.file.path, (err) => {
-                if (err) console.error("Error al eliminar".err)
-            });
-        }
-    }
-
-
+   
     try {
         const { numero_acta, estado, operarioId } = req.body
 
         // Validar campos requeridos
         if (Object.values(req.body).includes("")) {
-            eliminarPDF()
+            
             return res.status(400).json({
                 msg: "Lo sentimos, debe completar todos los campos"
             })
         }
         if (!mongoose.Types.ObjectId.isValid(operarioId)) {
-            eliminarPDF()
+            
             return res.status(400).json({
                 msg: "ID de operario no válido"
             });
@@ -118,7 +113,7 @@ const registrarReporteOperario = async (req, res) => {
 
         const operarioExiste = await Operarios.findById(operarioId);
         if (!operarioExiste) {
-            eliminarPDF()
+            
             return res.status(404).json({
                 msg: "El operario no existe"
             });
@@ -128,7 +123,7 @@ const registrarReporteOperario = async (req, res) => {
         // Verificar si ya existe el reporte
         const reporteExistente = await Reporte.findOne({ numero_acta })
         if (reporteExistente) {
-            eliminarPDF()
+            
             return res.status(400).json({
                 msg: "Lo sentimos, este reporte ya se encuentra registrado"
             })
@@ -142,11 +137,25 @@ const registrarReporteOperario = async (req, res) => {
                 })
             }
         }
+        let archivoUrl = null;
+        if (req.file) {
+            // Convertir el buffer a base64
+            const b64 = Buffer.from(req.file.buffer).toString('base64');
+            const dataURI = `data:${req.file.mimetype};base64,${b64}`;
+            
+            // Subir a Cloudinary
+            const resultado = await cloudinary.uploader.upload(dataURI, {
+                resource_type: 'raw',
+                format: 'pdf',
+                folder: 'reportes' 
+            });
+            archivoUrl = resultado.secure_url;
+        }
 
         // Crear nuevo reporte
         const nuevoReporte = new Reporte({
             ...req.body,
-            archivo: req.file ? req.file.path : null,
+            archivo: archivoUrl,
             operario: operarioId,  // Asignamos el operario al reporte
             Dependencia: req.body.dependencias,
             fecha_creacion: Date.now()
@@ -159,7 +168,7 @@ const registrarReporteOperario = async (req, res) => {
         })
 
     } catch (error) {
-        eliminarPDF()
+        
         console.log(error)
         res.status(500).json({
             msg: "Error al registrar el reporte"
@@ -226,13 +235,7 @@ const listarReportesOperario = async (req, res) => {
 //metodo para modificar el reporte 
 
 const actualizarReporte = async (req, res) => {
-    const eliminarPDF = () => {
-        if (req.file) {
-            fs.unlink(req.file.path, (err) => {
-                if (err) console.error("Error al eliminar.".err)
-            });
-        }
-    }
+   
     try {
         const { id } = req.params;
         const datosActualizacion = { ...req.body };
@@ -253,7 +256,6 @@ const actualizarReporte = async (req, res) => {
         // Validar que exista el reporte
         const reporteExiste = await Reporte.findById(id);
         if (!reporteExiste) {
-            eliminarPDF()
             return res.status(404).json({
                 msg: `No existe el reporte con ID: ${id}`
             });
@@ -263,7 +265,6 @@ const actualizarReporte = async (req, res) => {
         if (datosActualizacion.numero_acta) {
             const reporteConNumeroActaExistente = await Reporte.findOne({ numero_acta: datosActualizacion.numero_acta });
             if (reporteConNumeroActaExistente && reporteConNumeroActaExistente._id.toString() !== id) {
-                eliminarPDF()
                 return res.status(400).json({
                     msg: "Este número de acta ya existe"
                 });
@@ -273,16 +274,34 @@ const actualizarReporte = async (req, res) => {
         // Si hay un archivo nuevo, actualizamos la ruta
         if (req.file) {
             if (reporteExiste.archivo) {
-                fs.unlink(reporteExiste.archivo, (err) => {
-                    if (err) {
-                        console.error("Error al eliminar el archivo anterior:", err);
-                    }
-                });
+                try {
+                    // Extraer el public_id directamente de la URL de Cloudinary
+                    const urlParts = reporteExiste.archivo.split('/');
+                    const fileNameWithExtension = urlParts[urlParts.length - 1];
+                    const fileName = fileNameWithExtension.split('.')[0];
+                    const publicId = `reportes/${fileName}.pdf`;
+                    
+                    console.log("Public ID a eliminar:", publicId);
+                    
+                    const result = await cloudinary.uploader.destroy(publicId, { 
+                        resource_type: 'raw'
+                    });
+                    console.log("Resultado de la eliminación:", result);
+                } catch (error) {
+                    console.error("Error al eliminar archivo:", error);
+                }
             }
 
-            datosActualizacion.archivo = req.file.path;
+            // Subir nuevo archivo
+            const dataURI = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+            const resultado = await cloudinary.uploader.upload(dataURI, {
+                resource_type: 'raw',
+                format: 'pdf',
+                folder: 'reportes'
+            });
+            datosActualizacion.archivo = resultado.secure_url;
         } else {
-            datosActualizacion.archivo = reporteExiste.archivo;
+            datosActualizacion.archivo = reporteExiste.archivo; 
         }
 
         // Actualizar el reporte incluyendo el archivo si existe
@@ -298,7 +317,6 @@ const actualizarReporte = async (req, res) => {
         });
 
     } catch (error) {
-        eliminarPDF()
         console.log(error);
         res.status(500).json({
             msg: "Error al actualizar el reporte"
@@ -309,14 +327,7 @@ const actualizarReporte = async (req, res) => {
 
 //metodo para modificar el reporte para los operarios
 const actualizarReporteOperario = async (req, res) => {
-    const eliminarPDF = () => {
-        if (req.file) {
-            fs.unlink(req.file.path, (err) => {
-                if (err) console.error("Error al eliminar".err)
-            });
-        }
-    }
-
+    
     try {
         const { id } = req.params
         const datosActualizar = {}
@@ -329,7 +340,7 @@ const actualizarReporteOperario = async (req, res) => {
         }
         // Validar campos vacíos
         if (Object.values(req.body).includes("")) {
-            eliminarPDF()
+            
             return res.status(400).json({
                 msg: "Lo sentimos, debe completar todos los campos"
             })
@@ -337,7 +348,7 @@ const actualizarReporteOperario = async (req, res) => {
 
         // Validar ID
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            eliminarPDF()
+            
             return res.status(404).json({
                 msg: `Lo sentimos, no existe el reporte ${id}`
             })
@@ -346,7 +357,7 @@ const actualizarReporteOperario = async (req, res) => {
         // Obtener el reporte actual
         const reporteActual = await Reporte.findById(id)
         if (!reporteActual) {
-            eliminarPDF()
+            
             return res.status(404).json({
                 msg: `Lo sentimos, no se encontró el reporte ${id}`
             })
@@ -360,20 +371,23 @@ const actualizarReporteOperario = async (req, res) => {
         }
         if (req.file) {
 
-            if (reporteActual.archivo) {
-                fs.unlink(reporteActual.archivo, (err) => {
-                    if (err) {
-                        console.error("Error al eliminar el archivo anterior:", err);
-                    }
-                });
-            }
-            datosActualizar.archivo = req.file.path;
+            const b64 = Buffer.from(req.file.buffer).toString('base64');
+            const dataURI = `data:${req.file.mimetype};base64,${b64}`;
+            
+            // Subir a Cloudinary
+            const resultado = await cloudinary.uploader.upload(dataURI, {
+                resource_type: 'raw',
+                format: 'pdf',
+                folder: 'reportes' // Especifica la carpeta en Cloudinary
+            });
+            datosActualizar.archivo = resultado.secure_url; 
         } else {
             datosActualizar.archivo = reporteActual.archivo;
         }
 
         const fechaCreacion = reporteActual._id.getTimestamp()
-        const fechaLimite = new Date(fechaCreacion.getTime() + 3 * 60000) // 5 minutos en milisegundos
+        const fechaLimite = new Date(fechaCreacion.getTime() + 2 * 24 * 60 * 60 * 1000) //2 dias 
+        //const fechaLimite = new Date(fechaCreacion.getTime() + 2 * 60000) // 2 minutos en milisegundos
         const ahora = new Date()
 
         console.log('Fecha Creación:', fechaCreacion)
@@ -382,7 +396,7 @@ const actualizarReporteOperario = async (req, res) => {
         console.log('Tiempo restante (minutos):', (fechaLimite - ahora) / 60000)
 
         if (ahora > fechaLimite) {
-            eliminarPDF()
+            
             return res.status(403).json({
                 msg: "No puede modificar el reporte pasados 2 minutos desde su creación"
             })
@@ -403,7 +417,7 @@ const actualizarReporteOperario = async (req, res) => {
         })
 
     } catch (error) {
-        eliminarPDF()
+        
         console.log(error)
         res.status(500).json({
             msg: "Error al actualizar el reporte"
@@ -433,7 +447,7 @@ const filtrarReportes = async (req, res) => {
             const endDate = new Date(fecha_fin);
             endDate.setHours(23, 59, 59, 999);
 
-            filter.fecha_creacion = {
+            filter.fecha_ingreso = {
                 $gte: startDate,
                 $lte: endDate
             };
