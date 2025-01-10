@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import Reporte from "../models/Reporte.js";
 import Operarios from "../models/Operarios.js";
 import Administrador from "../models/Administrador.js";
+import cloudinary from "../config/cloudinary.js";
 //import fs from "fs"
 
 
@@ -489,7 +490,7 @@ const obtenerPDF = async (req, res) => {
             return res.status(404).json({ msg: "Reporte no encontrado" })
         }
         //Enviar el archivo
-        res.sendFile(reporte.archivo, { root: '.' })
+        res.redirect(reporte.archivo)
 
     } catch (error) {
         console.log(error);

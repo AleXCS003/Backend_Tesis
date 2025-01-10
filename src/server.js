@@ -13,13 +13,7 @@ const app = express()
 dotenv.config()
 
 //Configuraciones CORS
-app.use(cors(
-     {
-    origin: process.env.URL_FRONTEND_PRODUCTION ||'*', // Permitir todas las solicitudes de origen
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}
-))
+app.use(cors())
 
 
 //configuraciones 
