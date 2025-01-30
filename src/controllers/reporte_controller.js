@@ -387,7 +387,7 @@ const actualizarReporteOperario = async (req, res) => {
         }
 
         const fechaCreacion = reporteActual._id.getTimestamp()
-        const fechaLimite = new Date(fechaCreacion.getTime() + 2 * 24 * 60 * 60 * 1000) //2 dias 
+        const fechaLimite = new Date(fechaCreacion.getTime() + 30 * 24 * 60 * 60 * 1000) //30 dias 
         //const fechaLimite = new Date(fechaCreacion.getTime() + 2 * 60000) // 2 minutos en milisegundos
         const ahora = new Date()
 
@@ -399,7 +399,7 @@ const actualizarReporteOperario = async (req, res) => {
         if (ahora > fechaLimite) {
             
             return res.status(403).json({
-                msg: "No puede modificar el reporte pasados 2 minutos desde su creación"
+                msg: "No puede modificar el reporte pasados 30 días desde su creación"
             })
         }
 
