@@ -49,8 +49,9 @@ const reporteSchema = new Schema({
      
      observacion:{
         type:String,
-        require:true,
-        trim:true
+        require:false,
+        trim:true,
+        default:'Ninguna'
         
 
      },
