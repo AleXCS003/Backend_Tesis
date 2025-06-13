@@ -434,7 +434,7 @@ const actualizarReporteOperario = async (req, res) => {
 const filtrarReportes = async (req, res) => {
     try {
 
-        const { numero_acta, fecha_inicio, fecha_fin ,estado} = req.query ;
+        const { numero_acta, fecha_inicio, fecha_fin ,estado,operarioId} = req.query ;
 
         const filter = {};
 
@@ -457,7 +457,10 @@ const filtrarReportes = async (req, res) => {
         if (estado && ['firmado', 'pendiente'].includes(estado.toLowerCase())) {
             filter.estado = estado.toLowerCase();
         }
-
+        //filtrar por operario si se proporciona el ID
+        if(operarioId && mongoose.Types.Object.isValid(operarioId)){
+            filter.operario = operarioId;
+        }
         //filtrar por tipo de usuario 
         if (req.operario) {
             filter.operario = req.operario._id; // Filtrar solo los reportes del operario
